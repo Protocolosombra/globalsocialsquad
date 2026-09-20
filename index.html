@@ -3,67 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Squad</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <title>Social Squad - Official Web App & Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-dark: #070512;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --neon-cyan: #00f2fe;
+      --neon-green: #00ff87;
+      --neon-orange: #ff9f43;
+      --neon-pink: #e52e71;
+      --gold: #ffd166;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
     
     body {
-      background-color: #06040c;
+      background-color: var(--bg-dark);
       color: #ffffff;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       min-height: 100vh;
       padding: 12px;
+      overflow-x: hidden;
     }
 
-    /* Marco del teléfono */
+    /* Top Navigation Bar (Switcher) */
+    .view-control {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 6px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .view-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .view-btn.active {
+      background: linear-gradient(90deg, #00f2fe, #4facfe);
+      color: #020916;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
+    }
+
+    /* Main Phone Wrapper */
     .phone-shell {
       width: 100%;
-      max-width: 390px;
-      background: linear-gradient(180deg, #1b153d 0%, #0d0921 100%);
+      max-width: 400px;
+      background: linear-gradient(180deg, #1d1544 0%, #0a071b 100%);
       border-radius: 36px;
-      padding: 18px 16px 24px 16px;
+      padding: 18px 16px 22px 16px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 0 50px rgba(79, 172, 254, 0.2);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(79, 172, 254, 0.15);
       display: flex;
       flex-direction: column;
       gap: 14px;
+      position: relative;
     }
 
-    /* Top Bar / Header */
+    /* Header Bar */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 2px 4px;
     }
 
-    .menu-icon {
+    .menu-btn {
       font-size: 20px;
+      color: #c4b5fd;
       cursor: pointer;
-      color: #d1c4e9;
+      background: none;
+      border: none;
     }
 
-    .app-title {
+    .app-logo {
       font-weight: 900;
-      font-size: 20px;
-      letter-spacing: 1px;
-      color: #38ef7d;
+      font-size: 19px;
+      letter-spacing: 0.5px;
       text-align: center;
       background: linear-gradient(180deg, #ffffff 0%, #60efff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 15px rgba(96, 239, 255, 0.4);
+      line-height: 1.1;
     }
 
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
+    .header-icons { display: flex; gap: 8px; }
 
-    .action-btn {
+    .icon-badge {
       position: relative;
       background: rgba(255, 255, 255, 0.08);
       border-radius: 12px;
@@ -74,16 +114,17 @@
       justify-content: center;
       font-size: 14px;
       cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .badge-dot {
+    .badge-num {
       position: absolute;
-      top: -2px;
-      right: -2px;
+      top: -3px;
+      right: -3px;
       background: #ff3b30;
       color: white;
-      font-size: 9px;
-      font-weight: 800;
+      font-size: 8px;
+      font-weight: 900;
       width: 14px;
       height: 14px;
       border-radius: 50%;
@@ -95,71 +136,74 @@
     /* Hero Section: Character & Map */
     .hero-grid {
       display: grid;
-      grid-template-columns: 1fr 1.2fr;
+      grid-template-columns: 1fr 1.25fr;
       gap: 10px;
-      height: 180px;
+      height: 175px;
+      align-items: flex-end;
     }
 
-    .character-container {
+    .character-stage {
+      height: 100%;
       display: flex;
-      justify-content: center;
-      align-items: flex-end;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
       position: relative;
     }
 
-    .character-img {
-      height: 175px;
-      object-fit: contain;
+    .character-svg {
+      height: 160px;
+      width: 100%;
       filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
+      transition: transform 0.3s;
     }
 
-    .map-container {
-      background: radial-gradient(circle at center, #2d225e 0%, #150f38 100%);
+    .character-svg:hover { transform: scale(1.03); }
+
+    .map-box {
+      height: 100%;
+      background: radial-gradient(circle at center, #2e2166 0%, #120b33 100%);
       border-radius: 20px;
-      border: 1px solid rgba(96, 239, 255, 0.25);
+      border: 1px solid rgba(0, 242, 254, 0.3);
       position: relative;
       display: flex;
       flex-direction: column;
+      justify-content: flex-end;
       align-items: center;
-      justify-content: space-between;
-      padding: 12px;
+      padding: 10px;
       overflow: hidden;
     }
 
-    /* SVG Map Graphic */
-    .map-bg {
+    .world-map-svg {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      opacity: 0.6;
-      pointer-events: none;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0.7;
     }
 
     .squads-pill {
       position: relative;
       z-index: 2;
-      background: rgba(18, 14, 45, 0.85);
-      border: 1px solid #60efff;
-      color: #60efff;
+      background: rgba(10, 6, 28, 0.9);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
       padding: 6px 14px;
       border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 0 10px rgba(96, 239, 255, 0.3);
-      margin-top: auto;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+      cursor: pointer;
     }
 
-    /* Card Containers */
+    /* Cards */
     .card {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--card-bg);
       border-radius: 20px;
-      padding: 14px 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px;
+      border: 1px solid var(--card-border);
       backdrop-filter: blur(10px);
     }
 
@@ -167,224 +211,446 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .card-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
-      color: #ffffff;
+      letter-spacing: 0.3px;
     }
 
     .points-badge {
-      font-size: 12px;
-      font-weight: 700;
-      color: #ffd166;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--gold);
       display: flex;
       align-items: center;
       gap: 4px;
-    }
-
-    .progress-label {
-      font-size: 11px;
-      color: #a097c4;
-      margin-bottom: 6px;
     }
 
     /* Progress Bar */
     .progress-track {
       width: 100%;
-      height: 10px;
-      background: #110c2e;
+      height: 9px;
+      background: #110a2d;
       border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 6px 0 12px 0;
+      border: 1px solid rgba(255,255,255,0.04);
     }
 
     .progress-fill {
       width: 65%;
       height: 100%;
-      background: linear-gradient(90deg, #ff9f43 0%, #ff5252 100%);
+      background: linear-gradient(90deg, var(--neon-orange) 0%, var(--neon-pink) 100%);
       border-radius: 8px;
-      box-shadow: 0 0 8px rgba(255, 159, 67, 0.6);
+      box-shadow: 0 0 8px rgba(255, 159, 67, 0.5);
     }
 
-    /* CTA Button */
-    .cta-button {
+    /* Action Buttons */
+    .btn-action {
       width: 100%;
-      background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
-      color: #030818;
+      background: linear-gradient(90deg, var(--neon-green) 0%, var(--neon-cyan) 100%);
+      color: #021008;
       font-weight: 900;
-      font-size: 15px;
-      padding: 13px;
+      font-size: 14px;
+      padding: 12px;
       border: none;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
-      letter-spacing: 0.3px;
-      transition: transform 0.2s;
+      box-shadow: 0 4px 18px rgba(0, 255, 135, 0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
     }
 
-    .cta-button:active {
-      transform: scale(0.98);
-    }
+    .btn-action:active { transform: scale(0.98); }
 
     /* Leaderboard */
-    .leaderboard-list {
+    .leader-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 6px;
+      gap: 6px;
+      margin-top: 8px;
     }
 
-    .leaderboard-item {
+    .leader-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(18, 13, 46, 0.6);
-      padding: 10px 12px;
+      background: rgba(17, 12, 43, 0.7);
+      padding: 8px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.03);
     }
 
-    .item-left {
+    .rank-col { display: flex; align-items: center; gap: 8px; }
+    .rank-num { font-weight: 900; font-size: 12px; color: var(--neon-orange); }
+    .squad-name { font-size: 11px; font-weight: 800; color: #e0d7f5; letter-spacing: 0.5px; }
+    .squad-score { font-size: 12px; font-weight: 900; color: var(--gold); }
+
+    /* Avatar Selector Bar */
+    .avatar-picker {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 6px;
+      padding: 6px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+    }
+
+    .avatar-opt {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      background: rgba(255,255,255,0.1);
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      font-size: 14px;
     }
 
-    .rank-num {
-      font-weight: 800;
-      font-size: 13px;
-      color: #ff9f43;
-      min-width: 28px;
+    .avatar-opt.selected {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.2);
     }
 
-    .squad-title {
-      font-weight: 800;
+    /* Views visibility */
+    .page-view { display: none; }
+    .page-view.active { display: flex; flex-direction: column; gap: 14px; }
+
+    /* Intranet Styles */
+    .admin-card {
+      background: rgba(0, 242, 254, 0.03);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-box {
+      background: rgba(255,255,255,0.03);
+      padding: 10px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stat-val { font-size: 18px; font-weight: 900; color: var(--neon-cyan); }
+    .stat-lbl { font-size: 10px; color: #aaa; margin-top: 2px; }
+
+    .admin-input {
+      width: 100%;
+      background: #0f0a28;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 4px;
       font-size: 12px;
-      letter-spacing: 0.5px;
-      color: #e2d9f3;
     }
 
-    .squad-score {
-      font-weight: 800;
-      font-size: 13px;
-      color: #ffd166;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+    .user-table {
+      width: 100%;
+      font-size: 11px;
+      text-align: left;
+      border-collapse: collapse;
+      margin-top: 6px;
     }
+    .user-table th, .user-table td { padding: 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .user-table th { color: #888; font-weight: 800; }
   </style>
 </head>
 <body>
 
+  <!-- Top Controller (Vista Usuario vs Intranet Admin) -->
+  <div class="view-control">
+    <button class="view-btn active" onclick="switchTab('app')">📱 Vista App Juego</button>
+    <button class="view-btn" onclick="switchTab('admin')">⚙️ Intranet Admin</button>
+  </div>
+
   <div class="phone-shell">
-    
-    <!-- Top Bar -->
-    <div class="top-bar">
-      <div class="menu-icon">☰</div>
-      <div class="app-title">SOCIAL<br>SQUAD</div>
-      <div class="header-actions">
-        <div class="action-btn">
-          👤<div class="badge-dot">1</div>
-        </div>
-        <div class="action-btn">
-          🔔<div class="badge-dot">2</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Hero: Character & Map -->
-    <div class="hero-grid">
-      <div class="character-container">
-        <!-- 3D Standing Character Avatar -->
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/25.png" style="display:none;">
-        <svg class="character-img" viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Head & Hair -->
-          <path d="M50 20C38 20 32 28 32 40C32 50 38 56 50 56C62 56 68 50 68 40C68 28 62 20 50 20Z" fill="#F4C29F"/>
-          <path d="M32 32C30 24 38 14 50 14C62 14 70 24 68 32C64 22 56 18 50 18C44 18 36 22 32 32Z" fill="#3D2314"/>
-          <!-- Face details -->
-          <circle cx="44" cy="38" r="2.5" fill="#222"/>
-          <circle cx="56" cy="38" r="2.5" fill="#222"/>
-          <path d="M47 46Q50 49 53 46" stroke="#C87A57" stroke-width="2" stroke-linecap="round"/>
-          <!-- Jacket & Torso -->
-          <path d="M30 58L22 100H36L42 62H58L64 100H78L70 58H30Z" fill="#1C2D42"/>
-          <path d="M42 58H58V95H42V58Z" fill="#FFFFFF"/>
-          <!-- Legs & Shoes -->
-          <path d="M36 100L32 145H44L46 100H36Z" fill="#151722"/>
-          <path d="M54 100L56 145H68L64 100H54Z" fill="#151722"/>
-          <path d="M28 143H45V152C45 152 35 154 28 152V143Z" fill="#FF3B30"/>
-          <path d="M55 143H72V152C72 152 65 154 55 152V143Z" fill="#FF3B30"/>
-        </svg>
-      </div>
-
-      <div class="map-container">
-        <!-- SVG Map Vector -->
-        <svg class="map-bg" viewBox="0 0 100 100">
-          <path d="M10,30 Q20,25 35,35 T60,25 T90,30" stroke="rgba(96,239,255,0.3)" stroke-width="1" fill="none" stroke-dasharray="2 2"/>
-          <path d="M15,60 Q40,50 65,65 T85,55" stroke="rgba(96,239,255,0.3)" stroke-width="1" fill="none" stroke-dasharray="2 2"/>
-          <!-- Location Pins -->
-          <circle cx="25" cy="30" r="4" fill="#00E676" />
-          <circle cx="65" cy="25" r="4" fill="#FFD166" />
-          <circle cx="75" cy="60" r="4" fill="#FF007A" />
-        </svg>
-
-        <div></div>
-        <div class="squads-pill">
-          <span>📍</span> Squads
-        </div>
-      </div>
-    </div>
-
-    <!-- Daily Quest Card -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Daily Quest</span>
-        <span class="points-badge">🪙 Nueszyt</span>
-      </div>
-      <div class="progress-label">Progress</div>
-      <div class="progress-track">
-        <div class="progress-fill"></div>
-      </div>
-      <button class="cta-button">Recruit New Members</button>
-    </div>
-
-    <!-- Squad Leaderboard Card -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Squad Leaderboard</span>
-      </div>
+    <!-- ==================== VISTA 1: APP DEL JUEGO ==================== -->
+    <div id="view-app" class="page-view active">
       
-      <div class="leaderboard-list">
-        <div class="leaderboard-item">
-          <div class="item-left">
-            <span class="rank-num">#1 🔥</span>
-            <span class="squad-title">SQUAD: LA FUEGO</span>
-          </div>
-          <span class="squad-score">🏆 257</span>
-        </div>
-
-        <div class="leaderboard-item">
-          <div class="item-left">
-            <span class="rank-num" style="color:#aaa;">#2 🏆</span>
-            <span class="squad-title">SQUAD: LA FUEGO</span>
-          </div>
-          <span class="squad-score">🏆 200</span>
-        </div>
-
-        <div class="leaderboard-item">
-          <div class="item-left">
-            <span class="rank-num" style="color:#cd7f32;">#3 🏆</span>
-            <span class="squad-title">SQUAD: LA FUEGO</span>
-          </div>
-          <span class="squad-score">🏆 175</span>
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <button class="menu-btn" onclick="alert('Menú de configuración de perfil')">☰</button>
+        <div class="app-logo">SOCIAL<br>SQUAD</div>
+        <div class="header-actions">
+          <div class="icon-badge" onclick="switchTab('admin')">👤<div class="badge-num">1</div></div>
+          <div class="icon-badge" onclick="alert('Notificaciones: 2 Misiones pendientes')">🔔<div class="badge-num">2</div></div>
         </div>
       </div>
+
+      <!-- Hero Section: Personaje 3D + Mapa Neón -->
+      <div class="hero-grid">
+        <div class="character-stage">
+          <!-- Personaje 3D Renderizado en Vector SVG -->
+          <svg id="main-avatar-svg" class="character-svg" viewBox="0 0 120 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="avatar-body">
+              <!-- Sombras y Piernas -->
+              <ellipse cx="60" cy="172" rx="35" ry="6" fill="#000" fill-opacity="0.5"/>
+              <path d="M48 110L44 165H56L58 110H48Z" fill="#181e29"/>
+              <path d="M62 110L64 165H76L72 110H62Z" fill="#181e29"/>
+              <path d="M38 163H57V171C57 171 46 173 38 171V163Z" fill="#ff3b30"/>
+              <path d="M63 163H82V171C82 171 71 173 63 171V163Z" fill="#ff3b30"/>
+              <!-- Torso y Chaqueta -->
+              <path d="M36 55L28 112H44L52 62H68L76 112H92L84 55H36Z" fill="#1c2d42"/>
+              <path d="M50 55H70V105H50V55Z" fill="#ffffff"/>
+              <path d="M56 55H64V105H56V55Z" fill="#e2e8f0"/>
+              <!-- Cabeza y Cabello -->
+              <path d="M60 18C46 18 40 26 40 40C40 52 46 58 60 58C74 58 80 52 80 40C80 26 74 18 60 18Z" fill="#f3a985"/>
+              <path d="M40 32C37 20 46 10 60 10C74 10 83 20 80 32C75 22 67 16 60 16C53 16 45 22 40 32Z" fill="#2c1a11"/>
+              <!-- Ojos e Iluminación -->
+              <circle cx="53" cy="38" r="3" fill="#1a1a1a"/>
+              <circle cx="67" cy="38" r="3" fill="#1a1a1a"/>
+              <circle cx="54" cy="37" r="1" fill="#fff"/>
+              <circle cx="68" cy="37" r="1" fill="#fff"/>
+              <path d="M56 47Q60 51 64 47" stroke="#c47d5e" stroke-width="2" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Mapa Mundial con Pines -->
+        <div class="map-box">
+          <svg class="world-map-svg" viewBox="0 0 200 120" fill="none">
+            <path d="M20,40 Q30,20 60,35 T120,25 T180,40" stroke="rgba(0,242,254,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <path d="M30,80 Q70,60 110,85 T170,70" stroke="rgba(0,242,254,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <!-- Contornos continentes estilizados -->
+            <path d="M30,30 Q45,25 50,45 T30,65 Z" fill="rgba(0,242,254,0.15)"/>
+            <path d="M110,25 Q140,20 150,50 T110,55 Z" fill="rgba(0,242,254,0.15)"/>
+            <path d="M140,65 Q165,60 170,85 T140,90 Z" fill="rgba(0,242,254,0.15)"/>
+            <!-- Pines de Ubicación -->
+            <circle cx="45" cy="35" r="4" fill="#00ff87"/>
+            <circle cx="130" cy="35" r="4" fill="#ffd166"/>
+            <circle cx="155" cy="75" r="4" fill="#e52e71"/>
+          </svg>
+          <div class="squads-pill" onclick="alert('Abriendo mapa interactivo de Squads cercanos...')">
+            <span>📍</span> Squads
+          </div>
+        </div>
+      </div>
+
+      <!-- Selector de Avatar -->
+      <div class="avatar-picker">
+        <div class="avatar-opt selected" onclick="selectAvatar(1, this)">👦</div>
+        <div class="avatar-opt" onclick="selectAvatar(2, this)">🤖</div>
+        <div class="avatar-opt" onclick="selectAvatar(3, this)">👑</div>
+        <div class="avatar-opt" onclick="selectAvatar(4, this)">⚡</div>
+      </div>
+
+      <!-- Daily Quest Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Daily Quest</span>
+          <span class="points-badge">🪙 <span id="user-points">250</span> PTS</span>
+        </div>
+        <div style="font-size: 11px; color: #a097c4;">Progress</div>
+        <div class="progress-track">
+          <div class="progress-fill"></div>
+        </div>
+        <button class="btn-action" onclick="recruitMember()">Recruit New Members</button>
+      </div>
+
+      <!-- Squad Leaderboard Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Squad Leaderboard</span>
+        </div>
+        <div class="leader-list">
+          <div class="leader-item">
+            <div class="rank-col">
+              <span class="rank-num">#1 🔥</span>
+              <span class="squad-name">SQUAD: LA FUEGO</span>
+            </div>
+            <span class="squad-score">🏆 257</span>
+          </div>
+          <div class="leader-item">
+            <div class="rank-col">
+              <span class="rank-num" style="color:#aaa;">#2 👑</span>
+              <span class="squad-name">SQUAD: ALPHA</span>
+            </div>
+            <span class="squad-score">🏆 200</span>
+          </div>
+          <div class="leader-item">
+            <div class="rank-col">
+              <span class="rank-num" style="color:#cd7f32;">#3 ⚡</span>
+              <span class="squad-name">SQUAD: TITANS</span>
+            </div>
+            <span class="squad-score">🏆 175</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== VISTA 2: INTRANET DE ADMINISTRACIÓN ==================== -->
+    <div id="view-admin" class="page-view">
+      
+      <div class="top-bar">
+        <div class="app-logo" style="color:var(--gold); text-shadow:none;">INTRANET ADMIN</div>
+        <div class="header-icons">
+          <div class="icon-badge" onclick="switchTab('app')">📱</div>
+        </div>
+      </div>
+
+      <!-- Métricas globales -->
+      <div class="grid-2">
+        <div class="stat-box">
+          <div class="stat-val" id="total-revenue">$1,450</div>
+          <div class="stat-lbl">Pagos Recibidos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="total-commissions" style="color:var(--gold);">$1,015</div>
+          <div class="stat-lbl">Comisiones Red</div>
+        </div>
+      </div>
+
+      <!-- Configuración del Plan de Licencia & Comisiones -->
+      <div class="admin-card">
+        <div style="font-weight: 800; font-size: 13px; margin-bottom: 8px;">CONFIGURACIÓN PAGO INICIAL</div>
+        <label style="font-size: 10px; color: #aaa;">Precio de Licencia (USD):</label>
+        <input type="number" id="cfg-price" class="admin-input" value="29">
+        
+        <label style="font-size: 10px; color: #aaa; margin-top:6px; display:block;">Comisión Nivel 1 (%):</label>
+        <input type="number" id="cfg-l1" class="admin-input" value="40">
+
+        <button class="btn-action" style="margin-top: 10px; padding: 8px; font-size: 12px;" onclick="saveConfig()">Guardar Cambios</button>
+      </div>
+
+      <!-- Simulación de Cobro $29 USD -->
+      <div class="admin-card" style="border-color: var(--neon-green);">
+        <div style="font-weight: 800; font-size: 13px; color: var(--neon-green);">PASARELA PAGO SIMULADO</div>
+        <p style="font-size: 10px; color:#ccc; margin: 4px 0;">Simula la entrada de un nuevo usuario que paga su licencia de $29 USD:</p>
+        <button class="btn-action" style="background: linear-gradient(90deg, #ff9f43, #ff5252); color:#fff;" onclick="simulatePayment()">💳 Pagar $29 USD y Activar Licencia</button>
+      </div>
+
+      <!-- Tabla de Miembros Registrados -->
+      <div class="admin-card">
+        <div style="font-weight: 800; font-size: 13px; margin-bottom: 6px;">MIEMBROS DE LA RED</div>
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Licencia</th>
+              <th>Comisión</th>
+            </tr>
+          </thead>
+          <tbody id="member-rows">
+            <tr>
+              <td>@carlos_v</td>
+              <td>$29 USD</td>
+              <td style="color:var(--neon-green); font-weight:800;">$11.60</td>
+            </tr>
+            <tr>
+              <td>@squad_leader</td>
+              <td>$29 USD</td>
+              <td style="color:var(--neon-green); font-weight:800;">$11.60</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
 
   </div>
 
+  <script>
+    // Configuración Inicial del Sistema
+    let state = {
+      points: parseInt(localStorage.getItem('ss_points')) || 250,
+      revenue: parseInt(localStorage.getItem('ss_revenue')) || 1450,
+      commissions: parseInt(localStorage.getItem('ss_commissions')) || 1015,
+      price: parseInt(localStorage.getItem('ss_price')) || 29,
+      l1_rate: parseInt(localStorage.getItem('ss_l1')) || 40
+    };
+
+    function updateUI() {
+      document.getElementById('user-points').innerText = state.points;
+      document.getElementById('total-revenue').innerText = '$' + state.revenue;
+      document.getElementById('total-commissions').innerText = '$' + state.commissions;
+      document.getElementById('cfg-price').value = state.price;
+      document.getElementById('cfg-l1').value = state.l1_rate;
+    }
+
+    // Switcher de Vistas (App / Intranet)
+    function switchTab(tab) {
+      document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+
+      if (tab === 'app') {
+        document.getElementById('view-app').classList.add('active');
+        document.querySelectorAll('.view-btn')[0].classList.add('active');
+      } else {
+        document.getElementById('view-admin').classList.add('active');
+        document.querySelectorAll('.view-btn')[1].classList.add('active');
+      }
+    }
+
+    // Selector de Avatares (Cambio de color/estilo dinámico)
+    function selectAvatar(id, el) {
+      document.querySelectorAll('.avatar-opt').forEach(a => a.classList.remove('selected'));
+      el.classList.add('selected');
+
+      const avatarGroup = document.getElementById('avatar-body');
+      if (id === 1) {
+        avatarGroup.children[2].setAttribute('fill', '#ff3b30'); // Zapatillas rojas
+      } else if (id === 2) {
+        avatarGroup.children[2].setAttribute('fill', '#00f2fe'); // Zapatillas cian
+      } else if (id === 3) {
+        avatarGroup.children[2].setAttribute('fill', '#ffd166'); // Zapatillas doradas
+      } else {
+        avatarGroup.children[2].setAttribute('fill', '#00ff87'); // Zapatillas verdes
+      }
+    }
+
+    // Reclutar miembros (+50 PTS)
+    function recruitMember() {
+      state.points += 50;
+      localStorage.setItem('ss_points', state.points);
+      updateUI();
+      alert('¡Miembro reclutado con éxito! Has ganado +50 PTS. Tu enlace de referido ha sido copiado.');
+    }
+
+    // Simular Pago de $29 USD desde Intranet
+    function simulatePayment() {
+      const comm = (state.price * (state.l1_rate / 100)).toFixed(2);
+      state.revenue += state.price;
+      state.commissions += parseFloat(comm);
+
+      localStorage.setItem('ss_revenue', state.revenue);
+      localStorage.setItem('ss_commissions', state.commissions);
+
+      // Agregar usuario a la tabla
+      const tbody = document.getElementById('member-rows');
+      const newRow = document.createElement('tr');
+      const userNum = Math.floor(Math.random() * 900) + 100;
+      newRow.innerHTML = `<td>@user_${userNum}</td><td>$${state.price} USD</td><td style="color:var(--neon-green); font-weight:800;">$${comm}</td>`;
+      tbody.appendChild(newRow);
+
+      updateUI();
+      alert(`¡Pago simulado de $${state.price} USD procesado! Se generaron $${comm} USD de comisión Nivel 1.`);
+    }
+
+    // Guardar Configuración de Intranet
+    function saveConfig() {
+      state.price = parseInt(document.getElementById('cfg-price').value) || 29;
+      state.l1_rate = parseInt(document.getElementById('cfg-l1').value) || 40;
+
+      localStorage.setItem('ss_price', state.price);
+      localStorage.setItem('ss_l1', state.l1_rate);
+
+      alert('Configuración guardada correctamente.');
+    }
+
+    // Inicializar al cargar
+    updateUI();
+  </script>
 </body>
 </html>
