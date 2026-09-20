@@ -1,0 +1,12 @@
+{
+  "name": "globalsocialsquad",
+  "version": "1.0.0",
+  "description": "Social Squad App",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}
